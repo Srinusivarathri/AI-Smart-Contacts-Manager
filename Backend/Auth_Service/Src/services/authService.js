@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const pool = require("../config/db");
+const jwt=require("jsonwebtoken")
 
 const registerUser = async (email, password) => {
   const existingUser = await pool.query(
@@ -25,7 +26,8 @@ const registerUser = async (email, password) => {
 
 const loginUser=async(email,password)=>{
   const result=await pool.query(
-    "SELECT id,email,passwordHash FROM users where email=$1",[email]
+    "SELECT id,email,password_hash FROM users where email=$1",
+    [email]
   );
   if(result.rows.length==0){
     throw new Error("Invalid Credentials");
@@ -38,9 +40,20 @@ const loginUser=async(email,password)=>{
   if(!isPasswordValid){
     throw new Error("Invalid Credentials");
   }
+  const token=jwt.sign(
+    {
+      userId: user.id,
+      email: user.email,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  )
   return {
-    id:user_id,
-    emai:user.email
+    id:user.id,
+    emai:user.email,
+    token,
   };
 }
 module.exports={

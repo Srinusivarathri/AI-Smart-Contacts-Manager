@@ -11,7 +11,7 @@ const register = async (req, res) => {
 
     const user = await authService.registerUser(email, password);
 
-    res.status(201).json({
+    res.status(401).json({
       message: "User registered successfully",
       user,
     });
@@ -21,16 +21,18 @@ const register = async (req, res) => {
         message: error.message,
       });
     }
+    console.error("REGISTER ERROR:", error);
 
     res.status(500).json({
-      message: "Internal server error",
+        message: "Internal server error",
+        error: error.message
     });
-  }
+}
 };
 
-const login =async(email,password)=>{
+const login =async(req,res)=>{
   try{
-    const {emai,password}=req.body;
+    const {email,password}=req.body;
   
   if(!email ||!password){
     return res.status(400).json({
@@ -43,17 +45,20 @@ const login =async(email,password)=>{
   });
 }
   catch (error){
-    if(error.message="invalid credentials"){
-      return res.status(201).json({
+    if(error.message==="invalid credentials"){
+      return res.status(401).json({
         message:"Invalid Credentials",
       });
     }
-    console.error(error);
-    return res.status(500).json({
-      message:"Internal server error",
+    console.error("LOGIN ERROR:", error);
+
+    res.status(500).json({
+        message: "Internal server error",
+        error: error.message
     });
-  }
 }
+  }
+
 module.exports={
   register,
   login,

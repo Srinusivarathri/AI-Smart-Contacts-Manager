@@ -1,21 +1,22 @@
+require("dotenv").config();
 const express = require("express");
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-const PORT = 5000;
+const PORT = process.env.PORT||5001;
 
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
-    service: "AI Smart Contacts Manager",
+    service: "Auth Service",
   });
 });
 
 app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Auth Service running on port ${PORT}`);
 });
