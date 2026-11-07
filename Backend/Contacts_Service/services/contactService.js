@@ -8,10 +8,28 @@ const createContact= async(name,phone,email)=>{
     return rows[0];
 };
 
-const getContacts=async()=>{
-    const {rows}=await pool.query(
-        "SELECT * FROM contacts",
-    );
+const getContacts=async(filters={})=>{
+    const {name,relation,address}=filters;
+    const conditions=[];
+    const values=[];
+
+    if(name){
+        values.push(`%${name}%`);
+        conditions.push(`name ILIKE $${values.length}`);
+    }
+    if(relation){
+        values.push(relation);
+        conditions.push(`Lower(relation)=Lower($${values.length})`);
+    }
+    if(address){
+        values.push(`%${address}%`);
+        conditions.push(`address ILIKE $${values.length}`);
+    }
+    let sql="SELECT * FROM contacts";
+    if(conditions.length>0){
+        sql+=" WHERE " + conditions.join(" AND ");
+    }
+    const {rows}=await pool.query(sql,values);
     return rows;
 };
 const getContactsById=async(id)=>{
