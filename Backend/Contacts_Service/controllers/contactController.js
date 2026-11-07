@@ -17,7 +17,7 @@ catch(err){
 
 const getContacts=async(req,res)=>{
     try{
-        const contacts=await contactService.getContacts();
+        const contacts=await contactService.getContacts(req.query);
         return res.json(contacts);
     }
     catch(err){
