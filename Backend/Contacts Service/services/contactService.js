@@ -22,9 +22,9 @@ const getContactsById=async(id)=>{
     return rows[0];
 };
 
-const updateContact=async(id)=>{
+const updateContact=async(id,name,phone,email)=>{
     const {rows}=await pool.query(
-        "UPDATE contacts SET name =$1,phone=$2,email=$3,WHERE ID=$4 RETURNING *",
+        "UPDATE contacts SET name =$1,phone=$2,email=$3 WHERE ID=$4 RETURNING *",
         [name,phone,email,id]
      );
      return rows[0];

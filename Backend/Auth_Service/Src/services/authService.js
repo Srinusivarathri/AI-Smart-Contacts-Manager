@@ -33,7 +33,7 @@ const loginUser=async(email,password)=>{
     throw new Error("Invalid Credentials");
   }
   const user=result.rows[0];
-  const isPasswordValid=await bycrypt.compare(
+  const isPasswordValid=await bcrypt.compare(
     password,
     user.password_hash
   );
@@ -52,7 +52,7 @@ const loginUser=async(email,password)=>{
   )
   return {
     id:user.id,
-    emai:user.email,
+    email:user.email,
     token,
   };
 }

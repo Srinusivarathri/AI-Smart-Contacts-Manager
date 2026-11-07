@@ -42,10 +42,11 @@ const login =async(req,res)=>{
   const user=await authService.loginUser(email,password);
   res.status(200).json({
     message:"login successful",
+    token:user.token,
   });
 }
   catch (error){
-    if(error.message==="invalid credentials"){
+    if(error.message==="Invalid Credentials"){
       return res.status(401).json({
         message:"Invalid Credentials",
       });
